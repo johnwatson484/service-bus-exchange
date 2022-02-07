@@ -4,7 +4,7 @@
   "description": "Client for Azure Service Bus",
   "main": "main.js",
   "scripts": {
-    "start" : "electron .",
+    "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,5 +21,8 @@
   "devDependencies": {
     "electron": "^17.0.0",
     "standard": "^16.0.4"
+  },
+  "dependencies": {
+    "electron-store": "^8.0.1"
   }
 }

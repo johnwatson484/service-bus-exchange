@@ -1,19 +1,32 @@
-// main.js
-
-// Modules to control application life and create native browser window
 const { app, BrowserWindow, ipcMain, Notification } = require('electron')
 const path = require('path')
+const Store = require('electron-store')
+
+const store = new Store({
+  configName: 'settings',
+  defaults: {
+    windowBounds: { width: 1200, height: 600 }
+  }
+})
 
 const createWindow = () => {
+  const { width, height } = store.get('windowBounds')
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
+    width,
+    height,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
       contextIsolation: false
     }
+  })
+
+  mainWindow.on('resize', () => {
+    const { width: newWidth, height: newHeight } = mainWindow.getBounds()
+    // Now that we have them, save them using the `set` method.
+    store.set('windowBounds', { width: newWidth, height: newHeight })
   })
 
   // and load the index.html of the app.
