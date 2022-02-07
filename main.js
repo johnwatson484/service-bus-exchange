@@ -10,14 +10,14 @@ nunjucks.install(app, {
 })
 
 const settingStore = new Store({
-  configName: 'settings',
+  name: 'settings',
   defaults: {
     windowBounds: { width: 1200, height: 600 }
   }
 })
 
 const connectionStore = new Store({
-  configName: 'connections',
+  name: 'connections',
   defaults: {
     connections: [{
       id: uuidv4(),
@@ -46,7 +46,7 @@ const createWindow = () => {
     settingStore.set('windowBounds', { width: newWidth, height: newHeight })
   })
 
-  const { connections } = connectionStore.get('connections')
+  const connections = connectionStore.get('connections')
 
   nunjucks.setContext('views/index.njk', {
     connections
@@ -56,7 +56,7 @@ const createWindow = () => {
   mainWindow.loadFile('views/index.njk')
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 }
 
 // This method will be called when Electron has finished
