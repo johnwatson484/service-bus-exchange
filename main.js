@@ -1,23 +1,40 @@
 const { app, BrowserWindow, ipcMain, Notification } = require('electron')
-const path = require('path')
 const Store = require('electron-store')
+const nunjucks = require('electron-nunjucks')
+const { v4: uuidv4 } = require('uuid')
 
-const store = new Store({
+nunjucks.install(app, {
+  path: 'views/',
+  autoescape: true,
+  watch: false
+})
+
+const settingStore = new Store({
   configName: 'settings',
   defaults: {
     windowBounds: { width: 1200, height: 600 }
   }
 })
 
+const connectionStore = new Store({
+  configName: 'connections',
+  defaults: {
+    connections: [{
+      id: uuidv4(),
+      name: 'FFC Service Bus',
+      connectionString: 'my-connection-string'
+    }]
+  }
+})
+
 const createWindow = () => {
-  const { width, height } = store.get('windowBounds')
+  const { width, height } = settingStore.get('windowBounds')
 
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width,
     height,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
       contextIsolation: false
     }
@@ -26,14 +43,20 @@ const createWindow = () => {
   mainWindow.on('resize', () => {
     const { width: newWidth, height: newHeight } = mainWindow.getBounds()
     // Now that we have them, save them using the `set` method.
-    store.set('windowBounds', { width: newWidth, height: newHeight })
+    settingStore.set('windowBounds', { width: newWidth, height: newHeight })
+  })
+
+  const { connections } = connectionStore.get('connections')
+
+  nunjucks.setContext('views/index.njk', {
+    connections
   })
 
   // and load the index.html of the app.
-  mainWindow.loadFile('index.html')
+  mainWindow.loadFile('views/index.njk')
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 }
 
 // This method will be called when Electron has finished
@@ -45,7 +68,9 @@ app.whenReady().then(() => {
   app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow()
+    }
   })
 })
 
@@ -53,7 +78,9 @@ app.whenReady().then(() => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit()
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
 })
 
 // In this file you can include the rest of your app's specific main process
