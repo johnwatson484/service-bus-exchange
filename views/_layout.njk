@@ -12,30 +12,23 @@
 </head>
 <body class="bg-dark text-light">
   <div class="d-flex w-100">
-    <div class="flex-column flex-shrink-0 bg-light vh-100" style="width: 100px;">
+    <div class="flex-column flex-shrink-0 h-100" style="width: 100px;">
       <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
-        <li class="nav-item"> <a href="#" class="nav-link active py-3 border-bottom"> <i class="fa fa-home"></i> <small>Home</small> </a> </li>
-        <li> <a href="#" class="nav-link py-3 border-bottom"> <i class="fa fa-dashboard"></i> <small>Dashboard</small> </a> </li>
+        <li class="nav-item"> <a href="#" class="nav-link active py-3 border-bottom"> <i class="fa fa-plug"></i> <small>Connections</small> </a> </li>
+        <li> <a href="#" class="nav-link py-3 border-bottom"> <i class="fa fa-envelope"></i> <small>Messages</small> </a> </li>
       </ul>
-      <div class="dropdown border-top"> <a href="#" class="d-flex align-items-center justify-content-center p-3 link-dark text-decoration-none dropdown-toggle" id="dropdownUser3" data-bs-toggle="dropdown" aria-expanded="false"> <img src="https://github.com/mdo.png" alt="mdo" width="24" height="24" class="rounded-circle"> </a>
-        <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3">
-          <li><a class="dropdown-item" href="#">New project...</a></li>
-          <li><a class="dropdown-item" href="#">Settings</a></li>
-          <li><a class="dropdown-item" href="#">Profile</a></li>
-          <li>
-            <hr class="dropdown-divider">
-        </li>
-        <li><a class="dropdown-item" href="#">Sign out</a></li>
-        </ul>
+    </div>
+    <div class="flex-column flex-shrink-0 h-100" style="width: 200px;" id="connection-nav">
+      <div class="container">
+        {% include "./_connections.njk" %}
       </div>
     </div>
-    <div class="flex-column flex-shrink-0 vh-100" style="width: 200px;" id="connection-nav">
-      {% include "./_connections.njk" %}
+    <div class="flex-column flex-shrink-0 h-100" id="message-nav" style="width: 200px; display:none;">
+      <div class="container">
+        {% include "./_messages.njk" %}
+      </div>
     </div>
-    <div class="flex-column flex-shrink-0 vh-100" id="message-nav" style="width: 200px; display:none;">
-      {% include "./_messages.njk" %}
-    </div>
-    <div class="flex-column flex-shrink-0 vh-100">
+    <div class="flex-column flex-grow-1 h-100">
       {% block content %}
       {% endblock %}
     </div>

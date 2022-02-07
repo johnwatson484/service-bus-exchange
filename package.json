@@ -1,5 +1,5 @@
 {
-  "name": "service-bus-interchange",
+  "name": "service-bus-exchange",
   "version": "1.0.0",
   "description": "Client for Azure Service Bus",
   "main": "main.js",
@@ -9,15 +9,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/johnwatson484/service-bus-interchange.git"
+    "url": "git+https://github.com/johnwatson484/service-bus-exchange.git"
   },
   "keywords": [],
   "author": "John Watson",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/johnwatson484/service-bus-interchange/issues"
+    "url": "https://github.com/johnwatson484/service-bus-exchange/issues"
   },
-  "homepage": "https://github.com/johnwatson484/service-bus-interchange#readme",
+  "homepage": "https://github.com/johnwatson484/service-bus-exchange#readme",
   "devDependencies": {
     "electron": "^17.0.0",
     "standard": "^16.0.4"
