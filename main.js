@@ -1,7 +1,6 @@
 const { app, BrowserWindow, ipcMain, Notification } = require('electron')
 const Store = require('electron-store')
 const nunjucks = require('electron-nunjucks')
-const { v4: uuidv4 } = require('uuid')
 
 nunjucks.install(app, {
   path: 'views/',
@@ -13,17 +12,6 @@ const settingStore = new Store({
   name: 'settings',
   defaults: {
     windowBounds: { width: 1200, height: 600 }
-  }
-})
-
-const connectionStore = new Store({
-  name: 'connections',
-  defaults: {
-    connections: [{
-      id: uuidv4(),
-      name: 'FFC Service Bus',
-      connectionString: 'my-connection-string'
-    }]
   }
 })
 
@@ -44,12 +32,6 @@ const createWindow = () => {
     const { width: newWidth, height: newHeight } = mainWindow.getBounds()
     // Now that we have them, save them using the `set` method.
     settingStore.set('windowBounds', { width: newWidth, height: newHeight })
-  })
-
-  const connections = connectionStore.get('connections')
-
-  nunjucks.setContext('views/index.njk', {
-    connections
   })
 
   // and load the index.html of the app.
