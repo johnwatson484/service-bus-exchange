@@ -8,16 +8,15 @@ const getEntities = async (connectionString) => {
   }
   const topics = []
   for await (const topic of serviceBusAdministrationClient.listTopics()) {
+    topic.subscriptions = []
+    for await (const subscription of serviceBusAdministrationClient.listSubscriptions(topic.name)) {
+      topic.subscriptions.push(subscription)
+    }
     topics.push(topic)
-  }
-  const subscriptions = []
-  for await (const subscription of serviceBusAdministrationClient.listSubscriptions()) {
-    subscriptions.push(subscription)
   }
   return {
     queues,
-    topics,
-    subscriptions
+    topics
   }
 }
 

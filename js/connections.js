@@ -41,8 +41,6 @@ const addConnectionToView = (connection) => {
         <ul id="queues-list-${connection.id}" style="list-style-type:none;"></ul>
         <h6 id="topics-header-${connection.id}">Topics</h6>
         <ul id="topics-list-${connection.id}" style="list-style-type:none;"></ul>
-        <h6 id="subscriptions-header-${connection.id}">Subscriptions</h6>
-        <ul id="subscriptions-list-${connection.id}" style="list-style-type:none;"></ul>
       </div>
     </div>`)
   document.getElementById(`delete-connection-${connection.id}`).addEventListener('click', () => deleteConnection(connection.id))
@@ -59,14 +57,17 @@ const toggleEntities = async (connection) => {
   const deleteButton = document.getElementById(`delete-connection-${connection.id}`)
 
   if(details.style.display === 'none') {
-    const { queues, topics, subscriptions } = await getEntities(connection.connectionString)
+    const { queues, topics } = await getEntities(connection.connectionString)
     details.style.display = 'block'
     deleteButton.style.display = 'block'
     addEntitiesToConnection(connection, queues, 'queue')
     addEntitiesToConnection(connection, topics, 'topic')
-    addEntitiesToConnection(connection, subscriptions, 'subscription')
   } else {
-    details.innerHTML = ''
+    const lists = details.getElementsByTagName('ul')
+    for (let i = 0; i < lists.length; i++) {
+      lists[i].innerHTML = ''
+    }
+
     details.style.display = 'none'
     deleteButton.style.display = 'none'
   }
@@ -76,7 +77,7 @@ const addEntitiesToConnection = (connection, entities, type) => {
   for (const entity of entities) {
     const list = document.getElementById(`${type}s-list-${connection.id}`)
     list.insertAdjacentHTML('beforeend', `
-      <li id="${type}-${connection.id}-${entity.name}" style="cursor: pointer;"><i class="fa-solid fa-diagram-project"></i>    ${entity.name}</li>`)
+      <li id="${type}-${connection.id}-${entity.name}" style="cursor: pointer;"><i class="fa-solid fa-diagram-project"></i> ${entity.name}</li>`)
   }
 }
 
