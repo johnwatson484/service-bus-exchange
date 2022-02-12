@@ -1,6 +1,6 @@
 const { v4: uuidv4 } = require('uuid')
 const Store = require('electron-store')
-const { ServiceBusAdministrationClient } = require('@azure/service-bus')
+const { getEntities } = require('../messaging')
 
 const connectionStore = new Store({
   name: 'connections',
@@ -53,11 +53,7 @@ const deleteConnectionFromView = (id) => {
 
 const toggleEntities = async (id) => {
   const connection = getConnectionById(id)
-  const serviceBusAdministrationClient = new ServiceBusAdministrationClient(connection.connectionString)
-  const queues = await serviceBusAdministrationClient.listQueues()
-  const topics = await serviceBusAdministrationClient.listTopics()
-  const subscriptions = await serviceBusAdministrationClient.listSubscriptions()
-  console.log(namespaceProperties)
+  const entities = await getEntities(connection.connectionString)
 }
 
 document.getElementById('add-connection-confirm').addEventListener('click', () => {
