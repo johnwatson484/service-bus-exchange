@@ -34,16 +34,19 @@ const deleteConnection = (id) => {
 const addConnectionToView = (connection) => {
   holder.insertAdjacentHTML('beforeend', `
     <div class="connection-item" id="connection-item-${connection.id}">
-      <p id="connection-header-${connection.id}" style="cursor: pointer;"><i class="fa-solid fa-arrow-right-arrow-left"></i> ${connection.name}</p>
-      <button class="btn btn-danger btn-sm" id="delete-connection-${connection.id}" data-id=${connection.id}><i class="fa-solid fa-minus"></i></button>
-      <p id="queues-header-${connection.id}" style="display:none;">Queues</p>
-      <p id="topics-header-${connection.id}" style="display:none;">Topics</p>
-      <p id="subscriptions-header-${connection.id}" style="display:none;">Subscriptions</p>
+      <h6 id="connection-header-${connection.id}" style="cursor: pointer;"><i class="fa-solid fa-arrow-right-arrow-left"></i>    ${connection.name}</h5>
+      <button class="btn btn-danger btn-xs" id="delete-connection-${connection.id}" data-id=${connection.id} style="display:none; margin-bottom:20px;"><i class="fa-solid fa-minus"></i></button>
+      <div id="connection-detail-${connection.id}" style="display:none;">
+        <h6 id="queues-header-${connection.id}">Queues</h6>
+        <ul id="queues-list-${connection.id}" style="list-style-type:none;"></ul>
+        <h6 id="topics-header-${connection.id}">Topics</h6>
+        <ul id="topics-list-${connection.id}" style="list-style-type:none;"></ul>
+        <h6 id="subscriptions-header-${connection.id}">Subscriptions</h6>
+        <ul id="subscriptions-list-${connection.id}" style="list-style-type:none;"></ul>
+      </div>
     </div>`)
   document.getElementById(`delete-connection-${connection.id}`).addEventListener('click', () => deleteConnection(connection.id))
-  document.getElementById(`connection-header-${connection.id}`).addEventListener('click', async () => {
-    await toggleEntities(connection.id)
-  })
+  document.getElementById(`connection-header-${connection.id}`).addEventListener('click', async () => { await toggleEntities(connection) })
 }
 
 const deleteConnectionFromView = (id) => {
@@ -51,9 +54,30 @@ const deleteConnectionFromView = (id) => {
   connection.remove()
 }
 
-const toggleEntities = async (id) => {
-  const connection = getConnectionById(id)
-  const entities = await getEntities(connection.connectionString)
+const toggleEntities = async (connection) => {
+  const details = document.getElementById(`connection-detail-${connection.id}`)
+  const deleteButton = document.getElementById(`delete-connection-${connection.id}`)
+
+  if(details.style.display === 'none') {
+    const { queues, topics, subscriptions } = await getEntities(connection.connectionString)
+    details.style.display = 'block'
+    deleteButton.style.display = 'block'
+    addEntitiesToConnection(connection, queues, 'queue')
+    addEntitiesToConnection(connection, topics, 'topic')
+    addEntitiesToConnection(connection, subscriptions, 'subscription')
+  } else {
+    details.innerHTML = ''
+    details.style.display = 'none'
+    deleteButton.style.display = 'none'
+  }
+}
+
+const addEntitiesToConnection = (connection, entities, type) => {
+  for (const entity of entities) {
+    const list = document.getElementById(`${type}s-list-${connection.id}`)
+    list.insertAdjacentHTML('beforeend', `
+      <li id="${type}-${connection.id}-${entity.name}" style="cursor: pointer;"><i class="fa-solid fa-diagram-project"></i>    ${entity.name}</li>`)
+  }
 }
 
 document.getElementById('add-connection-confirm').addEventListener('click', () => {

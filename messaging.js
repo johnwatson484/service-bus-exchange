@@ -1,7 +1,6 @@
 const { ServiceBusAdministrationClient } = require('@azure/service-bus')
 
 const getEntities = async (connectionString) => {
-  console.log(connectionString)
   const serviceBusAdministrationClient = new ServiceBusAdministrationClient(connectionString)
   const queues = []
   for await (const queue of serviceBusAdministrationClient.listQueues()) {
